@@ -11,13 +11,26 @@ const taskCollection = {
   loadTasks: function() {
     let keys = Object.keys(localStorage),
         tasks = [];
+
     keys = keys.filter(el => el.startsWith('task-'));
     for (let key of keys) {
       tasks.push(this.getLocalStorageDataJSON(key));
     }
+
+    this.stack = [];
     tasks.map((task) => {
       this.stack.push(new Task(task.id, task.title));
     });
+    this.stack.sort((current, next) => current.id > next.id ? 1 : -1);
+  },
+  _searchFreeID: function() {
+    let minFreeID = 1;
+
+    for (let i = 0; i < this.stack.length; i++) {
+      if (this.stack[i]['id'] == minFreeID) { minFreeID++ } else break;
+    }
+
+    return minFreeID;
   }
 };
 
