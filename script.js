@@ -35,11 +35,21 @@ const taskCollection = {
 };
 
 class Task {
-  constructor(id, title) {
+  title = '';
+  constructor(id) {
     this.id = id;
+
+    let element = document.createElement("article");
+    element.classList.add('task');
+    element.id = `task-${this.id}`;
+    element.innerHTML = '<header class="task-title"><h3></h3></header>';
+    element.innerHTML += '<main></main>';
+    element.innerHTML += '<footer class="action-buttons"><button class="delete">X</button><button class="change">I</button><button class="ok">L</button></footer>'
+    document.getElementById("task-list").appendChild(element);
+  }
+  _setTitle(title) {
     this.title = title;
   }
-
   save() {
     let task = {
       'id': this.id,
@@ -104,3 +114,12 @@ themes.coffee = new Theme(
 
 taskCollection.loadTasks();
 Theme.change();
+
+document.getElementById('new-task').onclick = () => {
+  let freeID = taskCollection._searchFreeID();
+  taskCollection.stack.push(new Task(freeID));
+  document.getElementById(`task-${freeID}`).focus();
+  document.getElementById(`task-${freeID}`).onblur = () => {
+    document.getElementById(`task-${freeID}`).remove();
+  }
+}
