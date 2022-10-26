@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>Список задач</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <header>
+      <input id="search" type="text" placeholder="Поиск">
+      <div id="themes">
+        <button id="black-theme" onclick="Theme.change('black');">Ч</button>
+        <button id="coffee-theme" onclick="Theme.change('coffee');">К</button>
+        <button id="white-theme" onclick="Theme.change('white');">Б</button>
+      </div>
+    </header>
+
+    <main id="task-list"></main>
+
+    <footer>
+      <button id="new-task">+</button>
+    </footer>
+
+    <section id="popups">
+      <article id="new-task-form" class="popup">
+        <input name="task-name" type="text">
+      </article>
+    </section>
+
+    <script src="script.js"></script>
+
+  </body>
+</html>

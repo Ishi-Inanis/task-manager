@@ -1,72 +1,105 @@
-let themes = {};
+class Task {
+  static collection = []
 
-const taskCollection = {
-  stack: [],
-  getLocalStorageDataJSON: (dataKey) => {
-    return JSON.parse(localStorage.getItem(dataKey));
-  },
-  setLocalStorageDataJSON: (dataKey, data) => {
-    localStorage.setItem(dataKey, JSON.stringify(data));
-  },
-  loadTasks: function() {
+  #title = ''
+
+  element = document.createElement('article')
+
+  static load() {
     let keys = Object.keys(localStorage),
         tasks = [];
 
     keys = keys.filter(el => el.startsWith('task-'));
+
     for (let key of keys) {
-      tasks.push(this.getLocalStorageDataJSON(key));
+      tasks.push(getLocalStorageDataJSON(key));
     }
 
-    this.stack = [];
     tasks.map((task) => {
-      this.stack.push(new Task(task.id, task.title));
+      Task.collection.push(new Task(task.id, task.title));
     });
-    this.stack.sort((current, next) => current.id > next.id ? 1 : -1);
-  },
-  _searchFreeID: function() {
+
+    Task.collection.sort((current, next) => current.id > next.id ? 1 : -1);
+  }
+
+  static _searchFreeID() {
     let minFreeID = 1;
 
-    for (let i = 0; i < this.stack.length; i++) {
-      if (this.stack[i]['id'] == minFreeID) { minFreeID++ } else break;
+    for (let i = 0; i < Task.collection.length; i++) {
+      if (Task.collection[i]['id'] === minFreeID) { minFreeID++ } else break;
     }
 
     return minFreeID;
   }
-};
 
-class Task {
-  title = '';
+  save() {
+    const task = {
+      'id': this.id,
+      'title': this.title
+    };
+
+    localStorage.setItem(`task-${this.id}`, JSON.stringify(task));
+  }
+
   constructor(id) {
     this.id = id;
 
-    let element = document.createElement("article");
-    element.classList.add('task');
-    element.id = `task-${this.id}`;
-    element.innerHTML = '<header class="task-title"><h3></h3></header>';
-    element.innerHTML += '<main></main>';
-    element.innerHTML += '<footer class="action-buttons"><button class="delete">X</button><button class="change">I</button><button class="ok">L</button></footer>'
-    document.getElementById("task-list").appendChild(element);
-  }
-  _setTitle(title) {
-    this.title = title;
-  }
-  save() {
-    let task = {
-      'id': this.id,
-      'title': this.title,
-    };
-    localStorage.setItem(`task-${this.id}`, JSON.stringify(task));
+    this.element.classList.add('task');
+    this.element.id = `task-${this.id}`;
+    this.element.innerHTML = `
+      <header class="task-title"><h3></h3></header>
+      <main></main>
+      <footer class="action-buttons"><button class="delete">X</button><button class="change">I</button><button class="ok">L</button></footer>
+    `;
+
+    document.getElementById('task-list').appendChild(this.element);
   }
 }
 
 class Theme {
+  static collection = []
+
+  static change(color = localStorage.getItem('theme')) {
+    const root = document.querySelector(':root');
+
+    if (typeof localStorage.theme !== 'string') {
+      color = Object.keys(Theme.collection)[0];
+    }
+
+    for (const property in Theme.collection[color]) {
+      root.style.setProperty(`--${property}`, Theme.collection[color][property]);
+    }
+
+    localStorage.setItem('theme', color);
+  }
+
+  static add(
+      name,
+      selectionBackgroundColor,
+      selectionTextColor,
+      buttonHoverColor,
+      backgroundColor,
+      borderColor,
+      textColor
+  ) {
+    Theme.collection[name] = new Theme(
+        selectionBackgroundColor,
+        selectionTextColor,
+        buttonHoverColor,
+        backgroundColor,
+        borderColor,
+        textColor
+    );
+  }
+
   constructor(
-    selectionBackgroundColor,
-    selectionTextColor,
-    buttonHoverColor,
-    backgroundColor,
-    borderColor,
-    textColor) {
+      selectionBackgroundColor,
+      selectionTextColor,
+      buttonHoverColor,
+      backgroundColor,
+      borderColor,
+      textColor
+  ) {
     this['selection-background-color'] = selectionBackgroundColor;
     this['selection-text-color'] = selectionTextColor;
     this['button-hover-color'] = buttonHoverColor;
@@ -74,52 +107,54 @@ class Theme {
     this['border-color'] = borderColor;
     this['text-color'] = textColor;
   }
-
-  static change(color = localStorage.getItem('theme')) {
-    let root = document.querySelector(':root');
-
-    if (typeof localStorage.theme !== 'string') {
-      color = Object.keys(themes)[0];
-    }
-
-    for (let property in themes[color]) {
-      root.style.setProperty(`--${property}`, themes[color][property]);
-    }
-
-    localStorage.setItem('theme', color);
-  }
 }
 
-themes.white = new Theme(
-  '#333', // selection-background-color
-  '#fff', // selection-text-color
-  'gray', // button-hover-color
-  '#fff', // background-color
-  'darkgray', // border-color
-  '#333'); // text-color
-themes.black = new Theme(
-  '#fff', // selection-background-color
-  '#333', // selection-text-color
-  'gray', // button-hover-color
-  '#333', // background-color
-  'lightgray', // border-color
-  '#fff'); // text-color
-themes.coffee = new Theme(
-  '#fff', // selection-background-color
-  '#211', // selection-text-color
-  '#765', // button-hover-color
-  '#533', // background-color
-  '#baa', // border-color
-  '#baa'); // text-color
 
-taskCollection.loadTasks();
+const getLocalStorageDataJSON = (dataKey) => {
+      return JSON.parse(localStorage.getItem(dataKey));
+    },
+    setLocalStorageDataJSON = (dataKey, data) => {
+      localStorage.setItem(dataKey, JSON.stringify(data));
+    };
+
+
+Theme.add(
+    'white',
+    '#333',
+    '#fff',
+    'gray',
+    '#fff',
+    'darkgray',
+    '#333'
+);
+
+Theme.add(
+    'black',
+    '#fff',
+    '#333',
+    'gray',
+    '#333',
+    'lightgray',
+    '#fff'
+);
+
+Theme.add(
+    'coffee',
+    '#fff',
+    '#211',
+    '#765',
+    '#533',
+    '#baa',
+    '#baa'
+);
+
+Task.load();
+
 Theme.change();
 
 document.getElementById('new-task').onclick = () => {
-  let freeID = taskCollection._searchFreeID();
-  taskCollection.stack.push(new Task(freeID));
-  document.getElementById(`task-${freeID}`).focus();
-  document.getElementById(`task-${freeID}`).onblur = () => {
-    document.getElementById(`task-${freeID}`).remove();
-  }
+  const freeID = Task._searchFreeID(),
+      element = document.getElementById(`task-${freeID}`);
+
+  Task.collection.push(new Task(freeID));
 }

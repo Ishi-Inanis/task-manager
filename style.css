@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -9,30 +10,37 @@
   transition: .2s;
   border-radius: 10px;
 }
+
 body {
   background-color: var(--background-color);
 }
+
 body > * {
   padding: 30px;
 }
+
 body * {
   color: var(--text-color);
 }
+
 body *::selection {
   border-radius: 10px;
   background-color: var(--selection-background-color);
   color: var(--selection-text-color);
 }
+
 input {
   outline: none;
   border: 2px solid var(--border-color);
   padding: 0 30px;
   border-radius: 100px;
 }
+
 button {
   outline: none;
   cursor: pointer;
 }
+
 body > header {
   display: grid;
   grid-template-columns: minmax(100px, 1fr) .1fr;
@@ -45,36 +53,46 @@ body > header div#themes {
   display: flex;
   justify-content: center;
 }
+
 body > header div#themes button {
   padding: 10px;
 }
+
 body > header div#themes button:first-child {
   border-radius: 50px 0 0 50px;
 }
+
 body > header div#themes button {
   border-radius: 0;
 }
+
 body > header div#themes button:last-child {
   border-radius: 0 50px 50px 0;
 }
+
 body > header div#themes button#black-theme {
   background-color: #333;
   color: #fff;
 }
+
 body > header div#themes button#black-theme:hover {
   text-shadow: 0 0 3px #fff;
 }
+
 body > header div#themes button#white-theme {
   background-color: #fff;
   color: #333;
 }
+
 body > header div#themes button#white-theme:hover {
   text-shadow: 0 0 3px #333;
 }
+
 body > header div#themes button#coffee-theme {
   background-color: #533;
   color: #baa;
 }
+
 body > header div#themes button#coffee-theme:hover {
   text-shadow: 0 0 3px #baa;
 }
@@ -87,38 +105,48 @@ body > main#task-list {
   /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
   gap: 1em;
 }
+
 body > main#task-list article.task {
   border-radius: 100px;
   border: 4px solid var(--border-color);
 }
+
 body > main#task-list article.task header.task-title {
   margin: 30px 30px 0 30px;
   text-align: center;
 }
+
 body > main#task-list article.task footer.action-buttons {
   margin: 5px;
   display: flex;
   justify-content: space-around;
   opacity: 0;
 }
+
 body > main#task-list article.task:hover footer.action-buttons {
   opacity: 1;
 }
+
 body > main#task-list article.task footer.action-buttons * {
   font-family: Arial;
 }
+
 body > main#task-list article.task footer.action-buttons button:hover {
   color: var(--button-hover-color);
 }
+
 body > main#task-list article.task footer.action-buttons button.delete {
   transform: scaleX(-1) rotate(-90deg);
 }
+
 body > main#task-list article.task footer.action-buttons button.change {
   transform: scaleX(-1) rotate(-45deg);
 }
+
 body > main#task-list article.task footer.action-buttons button.ok {
   transform: scaleX(-1) rotate(-45deg);
 }
+
 body > footer {
   padding: 0;
   position: fixed;
@@ -126,6 +154,7 @@ body > footer {
   left: 50%;
   transform: translateX(-50%);
 }
+
 body > footer button#new-task, #add-task {
   background-color: var(--text-color);
   color: var(--background-color);
@@ -137,11 +166,13 @@ body > footer button#new-task, #add-task {
   height: 1em;
   width: 1em;
 }
+
 body > footer button#new-task:hover {
   background-color: var(--button-hover-color);
   /* background: linear-gradient(-45deg, green, lime);
   transition: 1s; */
 }
+
 body > section#popups {
   display: none;
 }
