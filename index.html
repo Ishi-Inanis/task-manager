@@ -10,7 +10,7 @@
   <body>
 
     <header>
-      <input id="search" type="text" placeholder="Поиск">
+      <input id="search" placeholder="Поиск">
       <div id="themes">
         <button id="black-theme" onclick="Theme.change('black');">Ч</button>
         <button id="coffee-theme" onclick="Theme.change('coffee');">К</button>
@@ -26,11 +26,13 @@
 
     <section id="popups">
       <article id="new-task-form" class="popup">
-        <input name="task-name" type="text">
+        <input name="task-name">
       </article>
     </section>
 
-    <script src="script.js"></script>
-
+    <script src="classes/Data.js"></script>
+    <script src="classes/Task.js"></script>
+    <script src="classes/Theme.js"></script>
+    <script src="index.js"></script>
   </body>
 </html>
