@@ -1,62 +1,48 @@
 /**
  * @typedef {object} Task
  * @param {number} id
+ * @param {string} title
+ * @param {boolean} completed
  */
 class Task {
   /** @type {Task[]} */
   static #collection = []
-  /** @type {HTMLElement} */
+  /** @type {HTMLTemplateElement} */
   static #template
 
   /** @type {number} */
   #id
-  /** @type {HTMLElement} */
+  /** @type {string} */
+  #title
+  /** @type {boolean} */
+  #completed
+  /** @type {TaskElement} */
   #element = document.createElement('task-item')
 
   /** @returns {Node} */
   static get template() {
-    if (!(this.#template instanceof HTMLElement)) {
+    if (!(this.#template instanceof HTMLTemplateElement)) {
       this.#template = document.createElement('template');
       this.#template.innerHTML = `
-        <header class="task-title">
-          <h3></h3>
-        </header>
-        <p></p>
-        <footer class="action-buttons">
-          <button class="delete">X</button>
-          <button class="change">I</button>
-          <button class="ok">L</button>
-        </footer>
+        <h1 slot="title"></h1>
+        <input type="checkbox" slot="checkbox">
       `;
     }
 
     return this.#template.content.cloneNode(true);
   }
 
+  // FIXME: remove localStorage usage
   static load() {
-    /** @type {string[]} */
-    const keys = Object.keys(localStorage).filter(el => el.startsWith('task-'));
+    // /** @type {string[]} */
+    // const keys = Object.keys(localStorage).filter(el => el.startsWith('task-'));
 
-    for (const key of keys) {
-      new Task(Data.get(key));
-    }
+    // for (const key of keys) {
+    //   new Task(Data.get(key));
+    // }
+
 
     Task.#collection.sort((current, next) => current.id > next.id ? 1 : -1);
-  }
-
-  /**
-   * @returns {number}
-   * @protected
-   */
-  static #searchFreeID() {
-    /** @type {number} */
-    let minFreeID = 1;
-
-    for (const { id } of Task.#collection) {
-      if (id === minFreeID) { minFreeID++ } else break;
-    }
-
-    return minFreeID;
   }
 
   /**
@@ -73,10 +59,12 @@ class Task {
   }
 
   /** @param {number} value */
-  set id(value) {
-    if (typeof value === 'number') {
-      this.#id = value;
-    } else throw Error('"id" must be a number');
+  set _id(value) {
+    try {
+      if (typeCheck('id', value, 'number')) this.#id = value;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /** @returns {number} */
@@ -84,15 +72,57 @@ class Task {
     return this.#id;
   }
 
-  save() {
-    Data.set(`task-${this.id}`, {
-      id: this.id
-    });
+  /** @param {string} value */
+  set title(value) {
+    try {
+      if (typeCheck('title', value, 'string')) this.#title = value;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  /** @param {number} id */
-  constructor(id = Task.#searchFreeID()) {
-    this.id = id;
+  /** @returns {string} */
+  get title() {
+    return this.#title;
+  }
+
+  /** @param {boolean} value */
+  set completed(value) {
+    if (typeof value === 'boolean') {
+      this.#completed = value;
+    } else throw Error('"completed" must be a boolean');
+  }
+
+  /** @returns {boolean} */
+  get completed() {
+    return this.#completed;
+  }
+
+  // save() {
+  //   Data.set(`task-${this.id}`, {
+  //     id: this.id
+  //   });
+  // }
+
+  /**
+   * @param {string} title
+   * @param {boolean} completed
+   * @param id
+   */
+  constructor(title, completed = false, id = undefined) {
+    this.title = title;
+    this.completed = completed;
+
+    // FIXME: find a better solution
+    (async () => {
+      try {
+        id = await Data.task.update('task', { title, completed });
+        if (id) this._id = id;
+        else Error('"id" is not defined');
+      } catch (error) {
+        console.error(error);
+      }
+    })()
 
     Task.#collection.push(this);
     Task.#show(this);

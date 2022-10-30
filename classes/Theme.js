@@ -13,19 +13,19 @@ class Theme {
   static #collection = new Map
 
   /** @param {string} name */
-  static change(name = localStorage.getItem('theme')) {
-    /** @type {HTMLElement} */
-    const root = document.querySelector(':root');
+  static change(name = Data.get('theme')) {
+    /** @type {CSSStyleDeclaration} */
+    const root = document.querySelector(':root').style;
 
-    if (typeof localStorage.theme !== 'string') {
+    if (typeof Data.get('theme') !== 'string') {
       name = Theme.#collection.keys().next().value;
     }
 
     for (const property in Theme.#collection.get(name)) {
-      root.style.setProperty(`--${property}`, Theme.#collection.get(name)[property]);
+      root.setProperty(`--${property}`, Theme.#collection.get(name)[property]);
     }
 
-    localStorage.setItem('theme', name);
+    Data.set('theme', name);
   }
 
   /**
@@ -46,7 +46,6 @@ class Theme {
       borderColor,
       textColor
   ) {
-    this.name = name;
     this['selection-background-color'] = selectionBackgroundColor;
     this['selection-text-color'] = selectionTextColor;
     this['button-hover-color'] = buttonHoverColor;
@@ -54,6 +53,6 @@ class Theme {
     this['border-color'] = borderColor;
     this['text-color'] = textColor;
 
-    Theme.#collection.set(this.name, this);
+    Theme.#collection.set(name, this);
   }
 }

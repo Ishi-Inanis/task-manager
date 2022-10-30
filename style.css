@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
 
+:root {
+  --selection-background-color: #333;
+  --selection-text-color: #fff;
+  --button-hover-color: #808080;
+  --background-color: #fff;
+  --border-color: #a9a9a9;
+  --text-color: #333;
+}
+
 * {
   margin: 0;
   padding: 0;
