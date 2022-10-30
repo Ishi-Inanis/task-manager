@@ -17,6 +17,7 @@ class Theme {
     /** @type {CSSStyleDeclaration} */
     const root = document.querySelector(':root').style;
 
+    // FIXME: undefined Data.get
     if (typeof Data.get('theme') !== 'string') {
       name = Theme.#collection.keys().next().value;
     }
@@ -25,6 +26,7 @@ class Theme {
       root.setProperty(`--${property}`, Theme.#collection.get(name)[property]);
     }
 
+    // FIXME: undefined Data.set
     Data.set('theme', name);
   }
 
@@ -52,6 +54,23 @@ class Theme {
     this['background-color'] = backgroundColor;
     this['border-color'] = borderColor;
     this['text-color'] = textColor;
+
+    // FIXME: find a better solution
+    (async () => {
+      try {
+        await Data.db.update('theme', {
+          name,
+          selectionBackgroundColor,
+          selectionTextColor,
+          buttonHoverColor,
+          backgroundColor,
+          borderColor,
+          textColor
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    })()
 
     Theme.#collection.set(name, this);
   }

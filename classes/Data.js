@@ -2,7 +2,8 @@
  * @typedef {object} Data
  */
 class Data {
-  static db = null;
+  /** @type {IndexedDB} */
+  static db;
 
   static async init() {
     Data.db = await new IndexedDB('taskManager', 1, (db, oldVersion, newVersion) => {
@@ -12,6 +13,7 @@ class Data {
         case 0: {
           /** @type {IDBObjectStore} */
           const task = db.createObjectStore('task', { keyPath: 'id', autoIncrement: true }),
+              /** @type {IDBObjectStore} */
               theme = db.createObjectStore('theme', { keyPath: 'name', autoIncrement: false });
 
           task.createIndex('title', 'title');

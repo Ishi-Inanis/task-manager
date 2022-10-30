@@ -1,3 +1,6 @@
+/**
+ * @typedef IndexedDB
+ */
 class IndexedDB {
   /**
    * @param {string} name
@@ -29,6 +32,12 @@ class IndexedDB {
     });
   }
 
+  /**
+   * @param {string} storeName
+   * @param {object} value
+   * @param {boolean} overwrite
+   * @returns {Promise}
+   */
   update(storeName, value, overwrite = false) {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(storeName, 'readwrite'),
@@ -36,6 +45,7 @@ class IndexedDB {
 
       let newId;
 
+      // FIXME: check
       value = Array.isArray(value) ? value : [value];
 
       value.forEach(value => {

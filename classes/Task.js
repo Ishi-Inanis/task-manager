@@ -116,7 +116,7 @@ class Task {
     // FIXME: find a better solution
     (async () => {
       try {
-        id = await Data.task.update('task', { title, completed });
+        id = await Data.db.update('task', { title, completed });
         if (id) this._id = id;
         else Error('"id" is not defined');
       } catch (error) {
