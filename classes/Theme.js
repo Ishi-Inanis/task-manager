@@ -17,8 +17,8 @@ class Theme {
     /** @type {CSSStyleDeclaration} */
     const root = document.querySelector(':root').style;
 
-    // FIXME: undefined Data.get
-    if (typeof Data.get('theme') !== 'string') {
+    // FIXME: maybe move in Data
+    if (typeof localStorage.getItem('theme') !== 'string') {
       name = Theme.#collection.keys().next().value;
     }
 
@@ -26,8 +26,8 @@ class Theme {
       root.setProperty(`--${property}`, Theme.#collection.get(name)[property]);
     }
 
-    // FIXME: undefined Data.set
-    Data.set('theme', name);
+    // FIXME: maybe move in Data
+    localStorage.setItem('theme', name);
   }
 
   /**

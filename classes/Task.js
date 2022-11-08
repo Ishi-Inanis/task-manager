@@ -24,6 +24,7 @@ class Task {
     if (!(this.#template instanceof HTMLTemplateElement)) {
       this.#template = document.createElement('template');
       this.#template.innerHTML = `
+        <link rel="stylesheet" href="style.css">
         <h1 slot="title"></h1>
         <input type="checkbox" slot="checkbox">
       `;

@@ -45,7 +45,6 @@ class IndexedDB {
 
       let newId;
 
-      // FIXME: check
       value = Array.isArray(value) ? value : [value];
 
       value.forEach(value => {
@@ -61,8 +60,8 @@ class IndexedDB {
         resolve(newId);
       }
 
-      transaction.onerror = () => {
-        reject(transaction.error);
+      transaction.onerror = (event) => {
+        reject(event.target.error);
       }
     });
   }
